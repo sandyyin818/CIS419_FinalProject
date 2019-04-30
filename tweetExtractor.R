@@ -7,7 +7,9 @@ users <- c("hillaryclinton",
            "anncoulter",
            "madenameruca",
            "laststand2019",
-           "mecdty"
+           "mecdty",
+           "Birdle_2963",
+           "TrumpsGAGirl"
           )
 
 tweets = get_timelines(users, n=3200)
