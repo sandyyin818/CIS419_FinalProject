@@ -1,0 +1,288 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%% ICML 2014 EXAMPLE LATEX SUBMISSION FILE %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Use the following line _only_ if you're still using LaTeX 2.09.
+%\documentstyle[icml2014,epsf,natbib]{article}
+% If you rely on Latex2e packages, like most moden people use this:
+\documentclass{article}
+
+% use Times
+\usepackage{times}
+% For figures
+\usepackage{graphicx} % more modern
+%\usepackage{epsfig} % less modern
+\usepackage{subfigure} 
+
+% For citations
+\usepackage{natbib}
+
+% For algorithms
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+% As of 2011, we use the hyperref package to produce hyperlinks in the
+% resulting PDF.  If this breaks your system, please commend out the
+% following usepackage line and replace \usepackage{icml2014} with
+% \usepackage[nohyperref]{icml2014} above.
+\usepackage{hyperref}
+
+% Packages hyperref and algorithmic misbehave sometimes.  We can fix
+% this with the following command.
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Employ the following version of the ``usepackage'' statement for
+% submitting the draft version of the paper for review.  This will set
+% the note in the first column to ``Under review.  Do not distribute.''
+\usepackage[accepted]{icml2014} 
+
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Ghrist, Yin, Nadel}
+
+\begin{document} 
+
+\twocolumn[
+\icmltitle{Project Report Template for CIS 419/519\\Introduction to Machine Learning}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2014
+% package.
+\icmlauthor{Annajune Ghrist}{aghrist@seas.upenn.edu}
+\icmlauthor{Josh Nadel}{jnad@seas.upenn.edu}
+\icmlauthor{Sandy Yin}{syin@gmail.com}
+
+% You may provide any keywords that you 
+% find helpful for describing your paper; these are used to populate 
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{naive Bayes, natural language processing, machine learning, tfidf, multinomial, Gaussian}
+
+\vskip 0.3in
+]
+
+\begin{abstract} 
+Our project will involve classifying toxic comments on various fields (e.g. insult, hate speech, threat, etc.). As important conversations shift more and more to social media, filtering toxic behavior becomes increasingly important. The anonymity of the internet provides opportunities for particularly rude, disrespectful and insulting comments, and various platforms need methods to identify these comments and deal with them. We found this problem to be extremely relevant and interesting, considering our generation’s growing integration of technology into our daily lives. Additionally, we will train a neural network on toxic comments that matches toxic tweets to their authors, providing a tool to address the issue of anonymity that so often surrounds harmful online content.
+
+%to create a comment generator that will produce comments matching sets of input classifications.
+\end{abstract} 
+
+\subsection{Methods and Preliminary Results}
+
+Our project will use a Naive Bayes algorithm to classify input data and generate new comments with various specified features. These outputs will then be interpreted by the second part of the algorithm, which will recommend the comment be flagged or ignored based on which labels it is given. In order to extract features from the given data, we will use the NLTK library to parse individual words and phrases from the given strings. In order to take sentence structure into account, we will use NLTK’s tree parsing functionality to determine the phrases within the comments, and then use these as features as well. In total, the presence of each unique word and phrase in the dataset will be a feature (excluding the largest phrase for each comment, which is just the entire comment itself). The size of phrases added as features will be limited to a smaller number, most likely around 3 or 4 (this will be adjustable). We also want to include a generative aspect, where tweets of different label types and combinations can be generated. \\
+
+Looking at the given dataset, the following statistics were observed:\\
+Percent unlabelled (i.e. not hateful, not toxic, etc.): 89.8\% \\
+Train data length:  159,571\\
+Test data length:  153,164\\
+
+The figure above shows the distribution of the labeled data across the labels. Comments can have multiple labels.
+
+\begin{figure}
+  \centering
+    \includegraphics[width=0.5\textwidth]{dist.png}
+  \caption{Distribution of Data Across Classes}
+  \label{fig:workflowedge}
+\end{figure}
+
+We experimented with a multinomial Naive Bayes classifier and with different vectorizations of the data. We trained the models independently on each label. It's very likely that a comment labeled as toxic is more likely to be labeled as severely toxic, obscene, etc. However, we simply trained the models separately on the 6 different labels. As we will discuss later, however, there could be benefits to this independent labeling. \newline
+We started with a basic word count vectorization, tried a tfidf vectorization, and then ran both again with the addition of n-grams of size 1 and 2. Below are the statistics achieved after using 5-fold cross validation for each vectorization. Each column corresponds to \textbf{one class} numbered 1-6 in order: toxic, severe\_toxic, obscene, threat, insult, and identity\_hate (with label names as column headers). We note that the percent of unlabeled data in the training set was 89.8 percent. We are therefore adjusting our initial goal of an 80 percent accurate model, because simply labeling all comments as not toxic would get us 89.8 percent accuracy. 
+
+
+
+% \subsection{Figures}
+ 
+% You may want to include figures in the paper to help readers visualize
+% your approach and your results. Such artwork should be centered,
+% legible, and separated from the text. Lines should be dark and at
+% least 0.5~points thick for purposes of reproduction, and text should
+% not appear on a gray background.
+
+% Label all distinct components of each figure. If the figure takes the
+% form of a graph, then give a name for each axis and include a legend
+% that briefly describes each curve. Do not include a title inside the
+% figure; instead, be sure to include a caption describing your figure.
+
+% You may float figures to the top or
+% bottom of a column, and you may set wide figures across both columns
+% (use the environment {\tt figure*} in \LaTeX), but always place
+% two-column figures at the top or bottom of the page.
+
+
+ 
+% \subsection{Tables} 
+ 
+% You may also want to include tables that summarize material. Like 
+% figures, these should be centered, legible, and numbered consecutively. 
+% However, place the title {\it above\/} the table, as in 
+% Table~\ref{sample-table}.
+% Note use of \abovespace and \belowspace to get reasonable spacing 
+% above and below tabular lines. 
+
+\begin{table}[t]
+\caption{Accuracies for Multinomial Naive Bayes}
+\label{sample-table}
+\vskip 0.15in
+\begin{center}
+\begin{small}
+\begin{sc}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccccr}
+\hline
+\abovespace\belowspace
+Multinomial & 1 & 2 & 3 & 4 & 5 & 6\\
+\hline
+\abovespace\belowspace
+Training &  &  &  &  &  & \\
+\hline
+\abovespace
+Wordcount  		& 0.955 & 0.988 & 0.972 & 0.996 & 0.967 & 0.989\\
+
+w/ 2-grams		& 0.975 & 0.993 & 0.983 & 0.997 & 0.979 & 0.993\\
+
+Tfidf 			& 0.927 & 0.990 & 0.955 & 0.997 & 0.954 & 0.991\\
+
+w/ 2-grams		& 0.914 & 0.990 & 0.950 & 0.997 & 0.951 & 0.991\\
+\hline
+\belowspace
+\abovespace\belowspace
+Validation &  &  &  &  &  & \\
+\hline
+\abovespace
+Wordcount   	& 0.941 & 0.985 & 0.963 & 0.994 & 0.959 & 0.986\\
+
+w/ 2-grams		& 0.940 & 0.989 & 0.965 & 0.996 & 0.962 & 0.990\\
+
+Tfidf 			& 0.921 & 0.990 & 0.953 & 0.997 & 0.952 & 0.991\\
+
+w/ 2-grams		& 0.910 & 0.990 & 0.949 & 0.997 & 0.951 & 0.991\\
+\hline
+\end{tabular}
+\%}
+\end{sc}
+\end{small}
+\end{center}
+\vskip -0.1in
+\end{table}
+
+\begin{table}[t]
+\caption{Precision for Multinomial Naive Bayes}
+\label{sample-table}
+\vskip 0.15in
+\begin{center}
+\begin{small}
+\begin{sc}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccccr}
+\hline
+\abovespace\belowspace
+Multinomial & 1 & 2 & 3 & 4 & 5 & 6\\
+\hline
+\abovespace\belowspace
+Training &  &  &  &  &  & \\
+\hline
+\abovespace
+Wordcount  		& 0.844 & 0.660 & 0.819 & 0.525 & 0.785 & 0.587\\
+
+Tfidf 			& 0.950 & 0.495 & 0.958 & 0.649 & 0.920 & 0.496\\
+
+\hline
+\end{tabular}
+\%}
+\end{sc}
+\end{small}
+\end{center}
+\vskip -0.1in
+\end{table}
+
+\begin{table}[t]
+\caption{Recall for Multinomial Naive Bayes}
+\label{sample-table}
+\vskip 0.15in
+\begin{center}
+\begin{small}
+\begin{sc}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccccr}
+\hline
+\abovespace\belowspace
+Multinomial & 1 & 2 & 3 & 4 & 5 & 6\\
+\hline
+\abovespace\belowspace
+Training &  &  &  &  &  & \\
+\hline
+\abovespace
+Wordcount  		& 0.800 & 0.712 & 0.803 & 0.523 & 0.767 & 0.578\\
+
+Tfidf 			& 0.588 & 0.500 & 0.554 & 0.502 & 0.520 & 0.500\\
+
+\hline
+\end{tabular}
+\%}
+\end{sc}
+\end{small}
+\end{center}
+\vskip -0.1in
+\end{table}
+
+\textbf{Implementation Notes}: \\
+In the TfIdf vectorizer, to account for non-standard stop words, we set the parameter max\_df to 0.5, i.e. any token that was in more than 50\% of documents was ignored. 
+
+Consider Tables 1-3. Interestingly, these results suggest that a TfIdf vectorizer is better at identifying the more severe comments ex. severe\_toxic, threat, and identity\_hate comments, while the count vectorizer is better at classifying the less severe comments ex. obscene, insult and toxic. The same results were observed when n-grams of 2 were used. This result is fairly consistent across the tables. This suggested that we could use a combination of the two vectorizers - since we are already training each label separately, we can train six different models and combine their results.
+
+Although not recorded here, we tried the same trials with a Gaussian Naive Bayes classifier, but the validation accuracies were far lower than those of the Multinomial Naive Bayes classifier (\~89\% val. accuracy), around the same accuracy that would have been obtained by blindly guessing unlabeled. Thus, we will be using the Multinomial Naive Bayes classifier. (NOTE: because of memory constraints, we were unable to run the Gaussian naive Bayes model on the full dataset and just ran it on 500 instances; however, we felt that these instances would be indicative of the model's performance). 
+
+\textbf{Final Classification Results}\\
+\begin{table}[t]
+\caption{Final Model Accuracies by Class}
+\label{sample-table}
+\vskip 0.15in
+\begin{center}
+\begin{small}
+\begin{sc}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{cccccc}
+\hline
+\abovespace\belowspace
+1 & 2 & 3 & 4 & 5 & 6\\
+\hline
+\abovespace\belowspace
+0.9323 & 0.9943 & 0.9572 & 0.9967 & 0.9545 & 0.9889\\
+\hline
+\end{tabular}
+\%}
+\end{sc}
+\end{small}
+\end{center}
+\vskip -0.1in
+\end{table}\\
+
+
+Table 4 shows the final accuracies of the model on the unlabeled test data. The model used was constructed as stated above, where different vectorizers were used for different classes. As before, the model is more accurate when classifying more severe comments. 
+
+\subsection{Future Work}
+
+Given the above results, we will utilize both in our final classifier. We will train six models, one for each potential class label; three will be tfidf vectorized and three will be count vectorized. The tfidf vectorized models will classify the more severe labels, i.e. severe\_toxic, threat, and identity\_hate, and the count vectorized models will classify the less severe labels, i.e. toxic, obscene, and insult. Thus, we are combining the results of what we have run to try and create an optimal model will be used for each label determination. \newline
+
+Although we originally planned to experiment with different n-gram lengths, the results obtained from just using n-grams of length two seem good enough that the majority of our future work will be put into the generative aspect of our original plan for the project. 
+ 
+\subsection{Citations and References} 
+
+The datasets we will be using are training and test datasets of 150k Wikipedia talk page edits, found here: https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge/data \newline
+The concept behind the project was also from a Kaggle competition involving this Wikipedia data.
+
+ 
+\end{document} 
+
+
+% This document was modified from the file originally made available by
+% Pat Langley and Andrea Danyluk for ICML-2K. This version was
+% created by Lise Getoor and Tobias Scheffer, it was slightly modified  
+% from the 2010 version by Thorsten Joachims & Johannes Fuernkranz, 
+% slightly modified from the 2009 version by Kiri Wagstaff and 
+% Sam Roweis's 2008 version, which is slightly modified from 
+% Prasad Tadepalli's 2007 version which is a lightly 
+% changed version of the previous year's version by Andrew Moore, 
+% which was in turn edited from those of Kristian Kersting and 
+% Codrina Lauth. Alex Smola contributed to the algorithmic style files.  
